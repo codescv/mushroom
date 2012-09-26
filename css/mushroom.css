@@ -1,0 +1,52 @@
+/*!
+ * CSS3 Card Games Example
+ * http://gamedesign.cc/html5games/CSS3-matching-game/
+ * 
+ * This is an example game for the book HTML5 Games Development: A Beginning Guide.
+ * 
+ * Copyright 2010, Thomas Seng Hin Mak
+ * makzan@gmail.com
+ *   
+ * All Right Reserved.
+ */
+ 
+body {
+	text-align: center;	
+	/*font-family: 'Droid Serif', arial, serif;*/
+	background: #a46740 url(../images/bg.jpg);
+	color: #ccc;
+	text-shadow: 0 1px 0 #222;
+}
+
+h1 {
+	font-weight: bold;
+	text-shadow: 0 2px 0 #222;
+}
+ 
+#background {
+	border-radius: 10px;
+	border: 1px solid #666;
+	-webkit-box-shadow: 0 -1px 0 #999, 0 1px 0 #999, inset 0 1px 6px #000;
+	
+	position: absolute;
+	background: #232 url(../images/table.jpg);
+	margin: 0 auto;
+
+	width:1200px;
+	height: 600px;
+}
+
+#layers {
+	height: 600px;
+	position: relative;
+	margin: 0 auto;
+	width:1200px;
+	height: 600px;
+}
+
+#layers canvas{
+	left: 50%;
+	margin-left: -600px;
+	position: absolute;
+}
+
