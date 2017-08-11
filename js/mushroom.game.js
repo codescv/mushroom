@@ -20,7 +20,7 @@ $(function () {
 	}
 
 	game.basket.image = new Image();
-	game.basket.image.src = "images/basket.png";
+	game.basket.image.src = "images/basket.jpg";
 	game.basket.image.onload = function () {
 		game.basket.width = game.basket.image.width;
 		game.basket.height = game.basket.image.height;
@@ -29,7 +29,7 @@ $(function () {
 
 	game.mushroom = {};
 	game.mushroom.image = new Image();
-	game.mushroom.image.src = "images/mushroom_32x32.png";
+	game.mushroom.image.src = "images/hulu.jpg";
 	game.mushroom.image.onload = function () {
 		game.mushroom.width = game.mushroom.image.width;
 		game.mushroom.height = game.mushroom.image.height;
@@ -89,7 +89,7 @@ $(function () {
 		$("#score_span").html(parseInt(game.score));
 	}
 
-	function update() {	
+	function update() {
 		var mushRoomsToBeRemoved = [];
 		game.mushrooms.foreach(function (mushroom, i) {
 			mushroom.update();
@@ -127,8 +127,8 @@ $(function () {
 		return Math.random() * (to - from) + from;
 	}
 
-	function clear(ctx) {	
-		ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); 
+	function clear(ctx) {
+		ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
 	}
 
 	function drawCircle(ctx, x, y, radius) {
@@ -137,12 +137,12 @@ $(function () {
 		circle_gradient.addColorStop(0, "#fff");
 		circle_gradient.addColorStop(1, "#cc0");
 		ctx.fillStyle = circle_gradient;
-		
+
 		// draw the path
 		ctx.beginPath();
-		ctx.arc(x, y, radius, 0, Math.PI*2, true); 
+		ctx.arc(x, y, radius, 0, Math.PI*2, true);
 		ctx.closePath();
-		
+
 		// actually fill the circle path
 		ctx.fill();
 	}
