@@ -65,13 +65,37 @@ $(function () {
 		this.splice(i, 1);
 	}
 
-	var texts = ['M2W', '刷题', '写文档'];
+	var vals = [
+		{text: 'M2W',
+		 score: 10},
+		{
+			text: '刷题',
+	   score: 10},
+		{
+			text: '写文档',
+			score: 10
+		},
+		{
+			text: '睡觉',
+			score: -50
+		},
+		{
+			text: '跑路',
+			score: -100
+		},
+		{
+			text: '眯眼',
+			score: -20
+		}
+	];
 	function Mushroom (x, y, v) {
 		this.x = x;
 		this.y = y;
 		this.v = v;
-		var r = Math.floor(rand(0, texts.length));
-		this.text = texts[r];
+		var r = Math.floor(rand(0, vals.length));
+		var v = vals[r];
+		this.text = v.text;
+		this.score = v.score;
 	}
 
 	Mushroom.prototype.draw = function (ctx) {
@@ -110,8 +134,8 @@ $(function () {
 			}
 		}
 		if (typeof hitmushroom !== 'undefined') {
+			game.score += game.mushrooms[i].score;
 			game.mushrooms.splice(hitmushroom, 1);
-			game.score += 10;
 		}
 	});
 
@@ -142,7 +166,6 @@ $(function () {
 		});
 
 		dropedMushrooms.foreach(function (i) {
-			game.score -= 20;
 			game.mushrooms.splice(i, 1);
 		});
 
@@ -154,10 +177,10 @@ $(function () {
 	}
 
 	function generateMushroom (argument) {
-		var margin = 20;
+		var margin = 40;
 		var x = rand(margin, game.width - margin);
 		var y = 0;
-		var v = rand(2, 7);
+		var v = rand(4, 7);
 		var mushroom = new Mushroom(x, y, v);
 		game.mushrooms.push(mushroom);
 	}
@@ -195,6 +218,7 @@ $(function () {
 
 	function drawText(ctx, text, x, y, style) {
 		ctx.fillStyle = style;
+		ctx.font = "20px serif";
 		ctx.fillText(text, x, y);
 	}
 
