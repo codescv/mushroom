@@ -2,6 +2,7 @@ $(function () {
 	var game = {};
 	game.context = $("#game_scene").get(0).getContext("2d");
 	game.score = 0;
+	game.win_score = 200;
 	game.mushrooms = [];
 	game.height = game.context.canvas.height;
 	game.width = game.context.canvas.width;
@@ -12,6 +13,15 @@ $(function () {
 		width : 0,
 		height : 0
 	};
+
+	game.cursor = {
+		x : 0,
+		y : 0
+	};
+
+	game.cursor.draw = function(ctx) {
+		drawCircle(ctx, this.x, this.y, 5, 5);
+	}
 
 	game.basket.draw = function (ctx) {
 		var x = this.x;
@@ -27,13 +37,16 @@ $(function () {
 		game.basket.y = game.height - game.basket.height - 10;
 	}
 
-	game.mushroom = {};
+	game.mushroom = {
+		width: 100,
+		height: 40
+	};
 	game.mushroom.image = new Image();
 	game.mushroom.image.src = "images/hulu.jpg";
-	game.mushroom.image.onload = function () {
-		game.mushroom.width = game.mushroom.image.width;
-		game.mushroom.height = game.mushroom.image.height;
-	}
+	// game.mushroom.image.onload = function () {
+	// 	game.mushroom.width = game.mushroom.image.width;
+	// 	game.mushroom.height = game.mushroom.image.height;
+	// }
 
 	Array.prototype.foreach = function (func) {
 		for (var i = 0; i < this.length; i++) {
@@ -52,14 +65,19 @@ $(function () {
 		this.splice(i, 1);
 	}
 
+	var texts = ['M2W', '刷题', '写文档'];
 	function Mushroom (x, y, v) {
 		this.x = x;
 		this.y = y;
 		this.v = v;
+		var r = Math.floor(rand(0, texts.length));
+		this.text = texts[r];
 	}
 
 	Mushroom.prototype.draw = function (ctx) {
-		drawImage(ctx, game.mushroom.image, this.x, this.y);
+		// drawImage(ctx, game.mushroom.image, this.x, this.y);
+		drawRect(ctx, this.x, this.y, game.mushroom.width, game.mushroom.height, "blue");
+		drawText(ctx, this.text, this.x + game.mushroom.width/2 - 15, this.y + game.mushroom.height/2, "white");
 	}
 
 	Mushroom.prototype.update = function () {
@@ -71,7 +89,30 @@ $(function () {
 	setInterval(generateMushroom, 1200);
 
 	$("#layers").bind("mousemove", function (e) {
-		game.basket.x = e.layerX - game.basket.width / 2;
+		// game.basket.x = e.layerX - game.basket.width / 2;
+		game.cursor.x = e.layerX;
+		game.cursor.y = e.layerY;
+	});
+
+	$("#layers").bind("click", function (e) {
+		var clickX = e.layerX;
+		var clickY = e.layerY;
+
+		var hitmushroom;
+		for (var i = 0; i < game.mushrooms.length; i++) {
+			var mushroom = game.mushrooms[i];
+			var mx = mushroom.x + game.mushroom.width / 2;
+			var my = mushroom.y + game.mushroom.height / 2;
+
+			if (Math.abs(clickX - mx) < game.mushroom.width / 2 && Math.abs(clickY - my) < game.mushroom.height / 2) {
+				hitmushroom = i;
+				break;
+			}
+		}
+		if (typeof hitmushroom !== 'undefined') {
+			game.mushrooms.splice(hitmushroom, 1);
+			game.score += 10;
+		}
 	});
 
 	function gameLoop() {
@@ -84,32 +125,31 @@ $(function () {
 		game.mushrooms.foreach(function (mushroom) {
 			mushroom.draw(game.context);
 		});
-		game.basket.draw(game.context);
+		// game.basket.draw(game.context);
+		game.cursor.draw(game.context);
 
 		$("#score_span").html(parseInt(game.score));
 	}
 
 	function update() {
-		var mushRoomsToBeRemoved = [];
+		var dropedMushrooms = [];
 		game.mushrooms.foreach(function (mushroom, i) {
 			mushroom.update();
 
-			if (mushroom.y + game.mushroom.height > game.basket.y) {
-				if (mushroom.x > game.basket.x && mushroom.x < game.basket.x + game.basket.width) {
-					mushRoomsToBeRemoved.push(i);
-					game.score += 10;
-					return;
-				}
-			}
-
 			if (mushroom.y > game.height) {
-				mushRoomsToBeRemoved.push(i);
+				dropedMushrooms.push(i);
 			}
 		});
 
-		mushRoomsToBeRemoved.foreach(function (i) {
+		dropedMushrooms.foreach(function (i) {
+			game.score -= 20;
 			game.mushrooms.splice(i, 1);
 		});
+
+		// detect win
+		if (game.score > game.win_score) {
+			$("#win").show();
+		}
 
 	}
 
@@ -151,5 +191,15 @@ $(function () {
 		if (image) {
 			ctx.drawImage(image, x, y);
 		}
+	}
+
+	function drawText(ctx, text, x, y, style) {
+		ctx.fillStyle = style;
+		ctx.fillText(text, x, y);
+	}
+
+	function drawRect(ctx, x, y, width, height, style) {
+		ctx.fillStyle = style;
+		ctx.fillRect(x, y, width, height);
 	}
 });
