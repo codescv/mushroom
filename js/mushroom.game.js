@@ -177,7 +177,7 @@ $(function () {
 	}
 
 	function generateMushroom (argument) {
-		var margin = 40;
+		var margin = 200;
 		var x = rand(margin, game.width - margin);
 		var y = 0;
 		var v = rand(4, 7);
